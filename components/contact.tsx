@@ -1,49 +1,60 @@
 "use client"
 
-import type React from "react"
-
 import { useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-import { Send, Mail, Phone, MapPin } from "lucide-react"
+import { Send, Mail, Phone, MapPin, AlertCircle } from "lucide-react"
 import ScrollAnimation from "./scroll-animation"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { type ContactFormData, ContactFormSchema } from "@/types"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 export default function Contact() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  })
-
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitSuccess, setSubmitSuccess] = useState<boolean | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-
-    // Simulación de envío de formulario
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-
-    // Aquí iría la lógica real de envío del formulario
-    console.log("Form submitted:", formData)
-
-    // Resetear formulario
-    setFormData({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ContactFormData>({
+    resolver: zodResolver(ContactFormSchema),
+    defaultValues: {
       name: "",
       email: "",
       subject: "",
       message: "",
-    })
-    setIsSubmitting(false)
+    },
+  })
+
+  const onSubmit = async (data: ContactFormData) => {
+    setIsSubmitting(true)
+    setSubmitSuccess(null)
+    setErrorMessage(null)
+
+    try {
+      // Simulación de envío de formulario
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+
+      // Aquí iría la lógica real de envío del formulario
+      console.log("Form submitted:", data)
+
+      // Resetear formulario
+      reset()
+      setSubmitSuccess(true)
+    } catch (error) {
+      console.error("Error submitting form:", error)
+      setErrorMessage("Hubo un error al enviar el formulario. Por favor, inténtalo de nuevo.")
+      setSubmitSuccess(false)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -111,60 +122,73 @@ export default function Contact() {
             <CardContent className="p-6">
               <h3 className="text-xl font-bold mb-6">Envíame un Mensaje</h3>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
+              {submitSuccess === true && (
+                <Alert className="mb-6 bg-green-50 dark:bg-green-950/30 text-green-800 dark:text-green-300 border-green-200 dark:border-green-900">
+                  <AlertDescription>¡Mensaje enviado con éxito! Te responderé lo antes posible.</AlertDescription>
+                </Alert>
+              )}
+
+              {submitSuccess === false && errorMessage && (
+                <Alert className="mb-6 bg-red-50 dark:bg-red-950/30 text-red-800 dark:text-red-300 border-red-200 dark:border-red-900">
+                  <AlertCircle className="h-4 w-4 mr-2" />
+                  <AlertDescription>{errorMessage}</AlertDescription>
+                </Alert>
+              )}
+
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="name">Nombre</Label>
+                    <Label htmlFor="name" className={errors.name ? "text-destructive" : ""}>
+                      Nombre
+                    </Label>
                     <Input
                       id="name"
-                      name="name"
+                      {...register("name")}
                       placeholder="Tu nombre"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      className="rounded-lg"
+                      className={`rounded-lg ${errors.name ? "border-destructive focus-visible:ring-destructive" : ""}`}
                     />
+                    {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email" className={errors.email ? "text-destructive" : ""}>
+                      Email
+                    </Label>
                     <Input
                       id="email"
-                      name="email"
                       type="email"
+                      {...register("email")}
                       placeholder="tu@email.com"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      className="rounded-lg"
+                      className={`rounded-lg ${errors.email ? "border-destructive focus-visible:ring-destructive" : ""}`}
                     />
+                    {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="subject">Asunto</Label>
+                  <Label htmlFor="subject" className={errors.subject ? "text-destructive" : ""}>
+                    Asunto
+                  </Label>
                   <Input
                     id="subject"
-                    name="subject"
+                    {...register("subject")}
                     placeholder="Asunto del mensaje"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    required
-                    className="rounded-lg"
+                    className={`rounded-lg ${errors.subject ? "border-destructive focus-visible:ring-destructive" : ""}`}
                   />
+                  {errors.subject && <p className="text-sm text-destructive">{errors.subject.message}</p>}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="message">Mensaje</Label>
+                  <Label htmlFor="message" className={errors.message ? "text-destructive" : ""}>
+                    Mensaje
+                  </Label>
                   <Textarea
                     id="message"
-                    name="message"
+                    {...register("message")}
                     placeholder="Escribe tu mensaje aquí..."
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    className="min-h-[120px] rounded-lg"
+                    className={`min-h-[120px] rounded-lg ${errors.message ? "border-destructive focus-visible:ring-destructive" : ""}`}
                   />
+                  {errors.message && <p className="text-sm text-destructive">{errors.message.message}</p>}
                 </div>
 
                 <Button type="submit" className="w-full rounded-full" disabled={isSubmitting}>
@@ -207,4 +231,3 @@ export default function Contact() {
     </section>
   )
 }
-

@@ -7,9 +7,10 @@ import { Badge } from "@/components/ui/badge"
 import { ExternalLink } from "lucide-react"
 import ScrollAnimation from "./scroll-animation"
 import Link from "next/link"
+import type { Certification } from "@/types"
 
 // Datos de ejemplo para certificaciones
-const certifications = [
+const certifications: Certification[] = [
   {
     id: 1,
     title: "Full Stack Web Development",
@@ -97,4 +98,3 @@ export default function Certifications() {
     </section>
   )
 }
-

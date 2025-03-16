@@ -9,7 +9,7 @@ interface ScrollAnimationProps {
 }
 
 export default function ScrollAnimation({ children, delay = 0 }: ScrollAnimationProps) {
-  const ref = useRef(null)
+  const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: false, amount: 0.3 })
   const controls = useAnimation()
 
@@ -42,4 +42,3 @@ export default function ScrollAnimation({ children, delay = 0 }: ScrollAnimation
     </motion.div>
   )
 }
-

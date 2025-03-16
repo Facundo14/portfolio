@@ -7,9 +7,10 @@ import { Button } from "@/components/ui/button"
 import { ExternalLink, Github } from "lucide-react"
 import ScrollAnimation from "./scroll-animation"
 import Link from "next/link"
+import type { Project } from "@/types"
 
 // Datos de ejemplo para proyectos
-const projects = [
+const projects: Project[] = [
   {
     id: 1,
     title: "E-commerce Platform",
