@@ -9,8 +9,8 @@ import Footer from "@/components/footer"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Portfolio Personal",
-  description: "Portfolio personal con proyectos, blog y más",
+  title: "Portfolio Tanovich Facundo",
+  description: "Portfolio Tanovich Facundo con proyectos, blog y más",
     generator: 'v0.dev'
 }
 
