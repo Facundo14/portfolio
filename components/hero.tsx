@@ -66,7 +66,7 @@ export default function Hero() {
                 <Github className="h-5 w-5" />
               </Button>
             </Link>
-            <Link href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
+            <Link href="https://www.linkedin.com/in/facundo-jorge-oscar-tanovich-91142994/" target="_blank" rel="noopener noreferrer">
               <Button variant="ghost" size="icon" className="rounded-full hover:bg-primary/10 hover:text-primary">
                 <Linkedin className="h-5 w-5" />
               </Button>

@@ -120,7 +120,7 @@ export default function Projects() {
 
       <ScrollAnimation delay={0.4}>
         <div className="text-center mt-12">
-          <Link href="https://github.com" target="_blank" rel="noopener noreferrer">
+          <Link href="https://github.com/Facundo14" target="_blank" rel="noopener noreferrer">
             <Button
               variant="outline"
               className="rounded-full border-primary text-primary hover:bg-primary hover:text-white"

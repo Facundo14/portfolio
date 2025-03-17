@@ -20,7 +20,7 @@ export default function Footer() {
           <div className="flex flex-col items-center md:items-end">
             <div className="flex gap-4 mb-4">
               <Link
-                href="https://github.com"
+                href="https://github.com/Facundo14"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-primary transition-colors"
@@ -28,7 +28,7 @@ export default function Footer() {
                 <Github className="h-5 w-5" />
               </Link>
               <Link
-                href="https://linkedin.com"
+                href="https://www.linkedin.com/in/facundo-jorge-oscar-tanovich-91142994/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-primary transition-colors"
