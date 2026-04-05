@@ -7,11 +7,14 @@ import { z } from "zod"
 
 const rootDirectory = path.join(process.cwd(), "content")
 
+/**
+ * Lee un post por su slug.
+ * Busca en: content/blog/<slug>.mdx
+ */
 export async function getPostBySlug(slug: string) {
   const filePath = path.join(rootDirectory, "blog", `${slug}.mdx`)
 
   try {
-    // Verificar si el archivo existe
     if (!fs.existsSync(filePath)) {
       console.error(`Post not found: ${slug}`)
       return null
@@ -20,7 +23,6 @@ export async function getPostBySlug(slug: string) {
     const fileContent = fs.readFileSync(filePath, "utf8")
     const { content, data } = matter(fileContent)
 
-    // Validar los datos del frontmatter
     try {
       const validatedData = PostSchema.parse({
         ...data,
@@ -29,16 +31,18 @@ export async function getPostBySlug(slug: string) {
 
       const mdxSource = await compileMDX({
         source: content,
-        options: { parseFrontmatter: true },
+        options: { parseFrontmatter: false },
       })
 
       return {
-        content: mdxSource,
+        content: mdxSource.content,
         frontmatter: validatedData,
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
         console.error(`Validation error in ${slug}:`, error.errors)
+      } else {
+        console.error(`Error compiling MDX for ${slug}:`, error)
       }
       return null
     }
@@ -48,11 +52,14 @@ export async function getPostBySlug(slug: string) {
   }
 }
 
+/**
+ * Devuelve todos los posts ordenados por fecha descendente.
+ * Lee todos los archivos .mdx de: content/blog/
+ */
 export async function getAllPosts(): Promise<Post[]> {
   const postsDirectory = path.join(rootDirectory, "blog")
 
   try {
-    // Verificar si el directorio existe
     if (!fs.existsSync(postsDirectory)) {
       console.warn("Blog directory does not exist:", postsDirectory)
       return []
@@ -69,7 +76,6 @@ export async function getAllPosts(): Promise<Post[]> {
         const slug = filename.replace(/\.mdx$/, "")
 
         try {
-          // Validar los datos del frontmatter
           return PostSchema.parse({
             ...data,
             slug,
@@ -93,6 +99,9 @@ export async function getAllPosts(): Promise<Post[]> {
   }
 }
 
+/**
+ * Devuelve todos los slugs disponibles (para generateStaticParams).
+ */
 export async function getPostSlugs(): Promise<string[]> {
   const postsDirectory = path.join(rootDirectory, "blog")
 
@@ -102,7 +111,9 @@ export async function getPostSlugs(): Promise<string[]> {
     }
 
     const filenames = fs.readdirSync(postsDirectory)
-    return filenames.filter((filename) => filename.endsWith(".mdx")).map((filename) => filename.replace(/\.mdx$/, ""))
+    return filenames
+      .filter((filename) => filename.endsWith(".mdx"))
+      .map((filename) => filename.replace(/\.mdx$/, ""))
   } catch (error) {
     console.error("Error reading post slugs:", error)
     return []

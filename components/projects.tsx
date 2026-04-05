@@ -4,52 +4,11 @@ import { useState } from "react"
 import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ExternalLink, Github } from "lucide-react"
+import { MdOpenInNew } from "react-icons/md"
+import { FiGithub } from "react-icons/fi"
 import ScrollAnimation from "./scroll-animation"
 import Link from "next/link"
-import type { Project } from "@/types"
-
-// Datos de ejemplo para proyectos
-const projects: Project[] = [
-  {
-    id: 1,
-    title: "E-commerce Platform",
-    description: "Una plataforma de comercio electrónico completa con carrito de compras, pagos y gestión de pedidos.",
-    image: "/placeholder.svg?height=400&width=600",
-    tags: ["Next.js", "Tailwind CSS", "Stripe", "MongoDB"],
-    demoUrl: "https://example.com",
-    githubUrl: "https://github.com",
-  },
-  {
-    id: 2,
-    title: "Dashboard Analytics",
-    description:
-      "Panel de control para visualizar y analizar datos con gráficos interactivos y reportes personalizados.",
-    image: "/placeholder.svg?height=400&width=600",
-    tags: ["React", "D3.js", "Firebase", "Tailwind CSS"],
-    demoUrl: "https://example.com",
-    githubUrl: "https://github.com",
-  },
-  {
-    id: 3,
-    title: "Social Media App",
-    description:
-      "Aplicación de redes sociales con funciones de publicación, comentarios, likes y mensajería en tiempo real.",
-    image: "/placeholder.svg?height=400&width=600",
-    tags: ["Next.js", "Socket.io", "Prisma", "PostgreSQL"],
-    demoUrl: "https://example.com",
-    githubUrl: "https://github.com",
-  },
-  {
-    id: 4,
-    title: "Portfolio Website",
-    description: "Sitio web de portfolio personal con animaciones, modo oscuro y diseño responsivo.",
-    image: "/placeholder.svg?height=400&width=600",
-    tags: ["Next.js", "Framer Motion", "Tailwind CSS"],
-    demoUrl: "https://example.com",
-    githubUrl: "https://github.com",
-  },
-]
+import { projects } from "@/data/projects"
 
 export default function Projects() {
   const [hoveredId, setHoveredId] = useState<number | null>(null)
@@ -99,18 +58,22 @@ export default function Projects() {
                   ))}
                 </div>
                 <div className="flex gap-4">
-                  <Link href={project.demoUrl} target="_blank" rel="noopener noreferrer">
-                    <Button variant="default" size="sm" className="rounded-full">
-                      <ExternalLink className="h-4 w-4 mr-2" />
-                      Demo
-                    </Button>
-                  </Link>
-                  <Link href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                    <Button variant="outline" size="sm" className="rounded-full">
-                      <Github className="h-4 w-4 mr-2" />
-                      Código
-                    </Button>
-                  </Link>
+                  {project.demoUrl && (
+                    <Link href={project.demoUrl} target="_blank" rel="noopener noreferrer">
+                      <Button variant="default" size="sm" className="rounded-full">
+                        <MdOpenInNew className="h-4 w-4 mr-2" />
+                        Demo
+                      </Button>
+                    </Link>
+                  )}
+                  {project.githubUrl && (
+                    <Link href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                      <Button variant="outline" size="sm" className="rounded-full">
+                        <FiGithub className="h-4 w-4 mr-2" />
+                        Código
+                      </Button>
+                    </Link>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -126,7 +89,7 @@ export default function Projects() {
               className="rounded-full border-primary text-primary hover:bg-primary hover:text-white"
             >
               Ver más proyectos en GitHub
-              <Github className="ml-2 h-4 w-4" />
+              <FiGithub className="ml-2 h-4 w-4" />
             </Button>
           </Link>
         </div>
@@ -134,4 +97,3 @@ export default function Projects() {
     </section>
   )
 }
-

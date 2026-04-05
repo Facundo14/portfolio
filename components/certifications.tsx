@@ -4,46 +4,10 @@ import { useState } from "react"
 import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ExternalLink } from "lucide-react"
+import { MdOpenInNew } from "react-icons/md"
 import ScrollAnimation from "./scroll-animation"
 import Link from "next/link"
-import type { Certification } from "@/types"
-
-// Datos de ejemplo para certificaciones
-const certifications: Certification[] = [
-  {
-    id: 1,
-    title: "Full Stack Web Development",
-    issuer: "Udemy",
-    date: "2023",
-    image: "/placeholder.svg?height=200&width=300",
-    url: "https://example.com",
-  },
-  {
-    id: 2,
-    title: "React Advanced Concepts",
-    issuer: "Frontend Masters",
-    date: "2022",
-    image: "/placeholder.svg?height=200&width=300",
-    url: "https://example.com",
-  },
-  {
-    id: 3,
-    title: "UI/UX Design Fundamentals",
-    issuer: "Coursera",
-    date: "2022",
-    image: "/placeholder.svg?height=200&width=300",
-    url: "https://example.com",
-  },
-  {
-    id: 4,
-    title: "JavaScript Algorithms and Data Structures",
-    issuer: "freeCodeCamp",
-    date: "2021",
-    image: "/placeholder.svg?height=200&width=300",
-    url: "https://example.com",
-  },
-]
+import { certifications } from "@/data/certifications"
 
 export default function Certifications() {
   const [hoveredId, setHoveredId] = useState<number | null>(null)
@@ -87,7 +51,7 @@ export default function Certifications() {
                   <h3 className="font-semibold mb-1 line-clamp-2">{cert.title}</h3>
                   <div className="flex justify-between items-center text-sm text-muted-foreground">
                     <span>{cert.date}</span>
-                    <ExternalLink className="h-4 w-4" />
+                    <MdOpenInNew className="h-4 w-4" />
                   </div>
                 </CardContent>
               </Card>

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Menu, X } from "lucide-react"
+import { MdMenu, MdClose } from "react-icons/md"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "./mode-toggle"
 import { motion, AnimatePresence } from "framer-motion"
@@ -40,7 +40,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="font-bold text-2xl text-primary">
             <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
-              Portfolio
+              Tanovich Facundo
             </motion.div>
           </Link>
 
@@ -70,7 +70,7 @@ export default function Navbar() {
           <div className="flex md:hidden items-center gap-4">
             <ModeToggle />
             <Button variant="ghost" size="icon" onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu">
-              {isOpen ? <X /> : <Menu />}
+              {isOpen ? <MdClose size={22} /> : <MdMenu size={22} />}
             </Button>
           </div>
         </div>

@@ -3,7 +3,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { CalendarDays, Clock, ArrowLeft, Share2 } from "lucide-react"
+import { CalendarDays, Clock, ArrowLeft } from "lucide-react"
 import { getPostBySlug, getPostSlugs } from "@/lib/mdx"
 import type { Metadata } from "next"
 
@@ -13,9 +13,13 @@ export async function generateStaticParams() {
   return slugs.map((slug) => ({ slug }))
 }
 
-// Generar metadatos dinámicos para cada post
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const {slug} = await params;
+// Generar metadatos dinámicos
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
   const post = await getPostBySlug(slug)
 
   if (!post) {
@@ -28,8 +32,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   return {
     title: `${post.frontmatter.title} | Blog`,
     description: post.frontmatter.excerpt,
-    // Add metadataBase to resolve the warning
-    metadataBase: new URL('http://localhost:3000'),
+    metadataBase: new URL("https://tu-portfolio.vercel.app"),
     openGraph: {
       title: post.frontmatter.title,
       description: post.frontmatter.excerpt,
@@ -38,8 +41,12 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
-  const {slug }= await params;
+export default async function BlogPostPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params
   const post = await getPostBySlug(slug)
 
   if (!post) {
@@ -73,30 +80,33 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           <CalendarDays className="h-4 w-4 mr-1" />
           <span className="mr-4">{frontmatter.date}</span>
           <Clock className="h-4 w-4 mr-1" />
-          <span>{frontmatter.readTime} lectura</span>
+          <span>{frontmatter.readTime} de lectura</span>
         </div>
 
-        <div className="relative w-full h-[300px] md:h-[400px] mb-8 rounded-xl overflow-hidden">
-          <Image
-            src={frontmatter.image || "/placeholder.svg?height=600&width=1200"}
-            alt={frontmatter.title}
-            fill
-            className="object-cover"
-            priority
-          />
-        </div>
+        {frontmatter.image && (
+          <div className="relative w-full h-[300px] md:h-[400px] mb-8 rounded-xl overflow-hidden">
+            <Image
+              src={frontmatter.image}
+              alt={frontmatter.title}
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+        )}
 
-        <article className="prose prose-lg dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: content }} />
+        {/* Renderizado MDX real — soporta componentes React, código con syntax highlight, etc. */}
+        <article className="prose prose-lg dark:prose-invert max-w-none">
+          {content}
+        </article>
 
         <div className="mt-12 pt-6 border-t">
-          <div className="flex justify-between items-center">
-            <h3 className="font-medium">Compartir este artículo</h3>
-            <div className="flex gap-2">
-              <Button variant="outline" size="icon" className="rounded-full">
-                <Share2 className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
+          <Link href="/blog">
+            <Button variant="outline" className="rounded-full">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Ver todos los artículos
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

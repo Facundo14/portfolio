@@ -3,8 +3,9 @@
 import { motion } from "framer-motion"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Github, Linkedin, Mail } from "lucide-react"
-import Link from "next/link"
+import {FiGithub, FiLinkedin, FiMail  } from "react-icons/fi"
+import Link from "next/link"  
+
 
 export default function Hero() {
   return (
@@ -61,19 +62,19 @@ export default function Hero() {
             transition={{ duration: 0.5, delay: 0.8 }}
             className="flex gap-4 mt-2"
           >
-            <Link href="https://github.com" target="_blank" rel="noopener noreferrer">
+            <Link href="https://github.com/Facundo14" target="_blank" rel="noopener noreferrer">
               <Button variant="ghost" size="icon" className="rounded-full hover:bg-primary/10 hover:text-primary">
-                <Github className="h-5 w-5" />
+                <FiGithub className="h-5 w-5" />
               </Button>
             </Link>
-            <Link href="https://www.linkedin.com/in/facundo-jorge-oscar-tanovich-91142994/" target="_blank" rel="noopener noreferrer">
+            <Link href="https://www.linkedin.com/in/facundotanovich/" target="_blank" rel="noopener noreferrer">
               <Button variant="ghost" size="icon" className="rounded-full hover:bg-primary/10 hover:text-primary">
-                <Linkedin className="h-5 w-5" />
+                <FiLinkedin className="h-5 w-5" />
               </Button>
             </Link>
-            <Link href="mailto:email@example.com">
+            <Link href="mailto:facundotanovich@gmail.com">
               <Button variant="ghost" size="icon" className="rounded-full hover:bg-primary/10 hover:text-primary">
-                <Mail className="h-5 w-5" />
+                <FiMail className="h-5 w-5" />
               </Button>
             </Link>
           </motion.div>
