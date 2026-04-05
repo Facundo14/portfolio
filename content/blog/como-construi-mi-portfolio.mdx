@@ -1,0 +1,71 @@
+---
+title: "Cómo construí mi portfolio con Next.js 15"
+excerpt: "Un repaso técnico de las decisiones de diseño y arquitectura detrás de este portfolio: MDX para el blog, data files para proyectos y certificaciones, y animaciones con Framer Motion."
+date: "2025-04-01"
+readTime: "6 min"
+image: "/blog/portfolio-nextjs.png"
+tags: ["Next.js", "TypeScript", "MDX", "Portfolio"]
+---
+
+## ¿Por qué Next.js 15?
+
+Cuando decidí armar mi portfolio, quería algo que fuera rápido, fácil de mantener y moderno. **Next.js 15** con el nuevo App Router fue la elección natural.
+
+Algunas ventajas que me entusiasmaron:
+
+- **Server Components por defecto** — menos JavaScript en el cliente
+- **Generación estática** para el blog (SEO perfecto)
+- **Soporte nativo para MDX** — escribo posts en Markdown puro
+
+## Estructura del proyecto
+
+```
+portfolio/
+├── app/
+│   ├── blog/
+│   │   ├── page.tsx         # Lista de posts
+│   │   └── [slug]/page.tsx  # Post individual
+│   └── page.tsx             # Home
+├── content/
+│   └── blog/                # 📝 Acá van tus .mdx
+├── data/
+│   ├── projects.ts          # 🚀 Tus proyectos
+│   └── certifications.ts    # 🏆 Tus certificados
+└── components/
+```
+
+## El sistema de blog
+
+La magia está en `lib/mdx.ts`. Lee todos los archivos `.mdx` de `content/blog/`, parsea el frontmatter con **gray-matter** y compila el MDX con **next-mdx-remote**.
+
+```typescript
+export async function getAllPosts(): Promise<Post[]> {
+  const filenames = fs.readdirSync(postsDirectory)
+  
+  return filenames
+    .filter(f => f.endsWith('.mdx'))
+    .map(f => parsePost(f))
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+}
+```
+
+## Agregar un nuevo post
+
+Solo creás un archivo `content/blog/mi-post.mdx` con este formato:
+
+```yaml
+---
+title: "Título del post"
+excerpt: "Descripción corta para el listado"
+date: "2025-04-01"
+readTime: "5 min"
+image: "/blog/mi-imagen.png"
+tags: ["React", "Tutorial"]
+---
+```
+
+Y listo — aparece automáticamente en `/blog`.
+
+## Conclusión
+
+El resultado es un portfolio que se actualiza solo: agregás un archivo y el sitio lo muestra. Sin bases de datos, sin CMS externo, todo vive en el repositorio.

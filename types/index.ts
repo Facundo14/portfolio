@@ -33,6 +33,7 @@ export interface Project {
   tags: string[]
   demoUrl: string
   githubUrl: string
+  featured?: boolean
 }
 
 // Interfaces para certificaciones

@@ -1,0 +1,90 @@
+---
+title: "TypeScript en React: tips que uso todos los días"
+excerpt: "Una selección de patrones de TypeScript que mejoran la experiencia de desarrollo en proyectos React: tipos utilitarios, discriminated unions, y más."
+date: "2025-03-15"
+readTime: "8 min"
+image: "/blog/typescript-react.png"
+tags: ["TypeScript", "React", "Tips"]
+---
+
+## ¿Por qué TypeScript?
+
+Empecé a usar TypeScript casi molesto. "¿Para qué tantos tipos si JavaScript ya funciona?"
+
+Hoy no volvería atrás. Estos son los patrones que más uso.
+
+## 1. Tipos utilitarios esenciales
+
+### `Partial<T>` — cuando no todos los campos son obligatorios
+
+```typescript
+interface User {
+  name: string
+  email: string
+  age: number
+}
+
+// Para actualizar solo algunos campos:
+function updateUser(id: string, data: Partial<User>) {
+  // data puede tener 0, 1 o todos los campos
+}
+```
+
+### `Pick<T, K>` — elegí solo lo que necesitás
+
+```typescript
+// Solo quiero nombre y email del User:
+type UserPreview = Pick<User, 'name' | 'email'>
+```
+
+## 2. Discriminated Unions para estados
+
+El patrón que más uso para manejar estados de fetch:
+
+```typescript
+type AsyncState<T> =
+  | { status: 'idle' }
+  | { status: 'loading' }
+  | { status: 'success'; data: T }
+  | { status: 'error'; error: string }
+
+// En el componente:
+function Component({ state }: { state: AsyncState<User> }) {
+  if (state.status === 'loading') return <Spinner />
+  if (state.status === 'error') return <Error msg={state.error} />
+  if (state.status === 'success') return <UserCard user={state.data} />
+  return null
+}
+```
+
+TypeScript sabe exactamente qué propiedades están disponibles en cada rama. Cero errores en runtime.
+
+## 3. Props opcionales vs requeridas
+
+```typescript
+interface ButtonProps {
+  label: string          // requerido
+  onClick: () => void    // requerido
+  variant?: 'primary' | 'outline' | 'ghost'  // opcional con valores
+  disabled?: boolean     // opcional
+}
+```
+
+## 4. Inferir tipos de arrays
+
+En lugar de definir el tipo por separado:
+
+```typescript
+const projects = [
+  { id: 1, title: "Portfolio", tags: ["Next.js"] }
+] as const
+
+type Project = typeof projects[number]
+// Infiere: { readonly id: 1; readonly title: "Portfolio"; ... }
+```
+
+## Conclusión
+
+TypeScript no es sobre escribir más código. Es sobre escribir código que se auto-documenta y que el editor entiende.
+
+Una vez que te acostumbrás al autocompletado y a los errores en tiempo de desarrollo (no en producción), no hay vuelta atrás.
